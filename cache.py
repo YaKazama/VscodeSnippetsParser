@@ -4,7 +4,7 @@
 import os
 import re
 import json
-from . import sublime
+import sublime
 from . import settings
 
 
