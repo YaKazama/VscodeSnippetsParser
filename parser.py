@@ -13,6 +13,8 @@ RE_BLANK_LINE = r"^\s*$"
 RE_LINE = r"^(/){2,}.*|(\s)*[^:\"](/){2,}.*\"?|((\s)*/\*(.*)\*/)"
 RE_MULTI_LINE_START = r"^(\s*(/\*)+|(/\*)+)+.*"
 RE_MULTI_LINE_END = r".*\*/.*$"
+RE_REPLACE = r"[/():\ ]"
+RE_DESCRIPTION = r"[<>]"
 
 
 def remove_file(path):
@@ -103,7 +105,9 @@ def parser_and_save_json_completions(data):
 
     for key in data.keys():
         _data = data[key]
-        if _data["scope"] in _scopes_dict.keys():
+        if _data["scope"] == "":
+            _sublime_scope = "all"
+        elif _data["scope"] in _scopes_dict.keys():
             _sublime_scope = _scopes_dict[_data["scope"]]
         else:
             _sublime_scope = "text.plain"
@@ -121,13 +125,18 @@ def parser_and_save_json_completions(data):
             "description": _data["description"]
         }
         _dict_completions.append(_competion_dict)
-        _tmp_dict = {
-            "scope": _sublime_scope,
-            "completions": _dict_completions
-        }
+        if _sublime_scope == "all":
+            _tmp_dict = {
+                "completions": _dict_completions
+            }
+        else:
+            _tmp_dict = {
+                "scope": _sublime_scope,
+                "completions": _dict_completions
+            }
         json_new_dict.update(
             {
-                "%s" % _data["scope"]: _tmp_dict
+                "%s" % _data["scope"] or "all": _tmp_dict
             }
         )
 
@@ -167,34 +176,59 @@ def parser_and_save_json_snippets(data):
 
     for key in data.keys():
         _data = data[key]
-        if _data["scope"] in _scopes_dict.keys():
+        if _data["scope"] == "":
+            _sublime_scope = "all"
+        elif _data["scope"] in _scopes_dict.keys():
             _sublime_scope = _scopes_dict[_data["scope"]]
         else:
             _sublime_scope = "text.plain"
 
-        snippet_info = """<snippet>
+        if re.findall(RE_DESCRIPTION, _data["description"]):
+            _description = "<![CDATA[{}]]>".format(_data["description"])
+        else:
+            _description = _data["description"]
+
+        if _sublime_scope == "all":
+            snippet_info = """<snippet>
+    <content><![CDATA[{}]]></content>
+    <tabTrigger>{}</tabTrigger>
+    <description>{}</description>
+</snippet>""".format(
+                "\n".join(_data["body"]),
+                _data["prefix"],
+                _description
+            )
+        else:
+            snippet_info = """<snippet>
     <content><![CDATA[{}]]></content>
     <tabTrigger>{}</tabTrigger>
     <scope>{}</scope>
     <description>{}</description>
 </snippet>""".format(
-            "\n".join(_data["body"]),
-            _data["prefix"],
-            _sublime_scope,
-            _data["description"]
-        )
+                "\n".join(_data["body"]),
+                _data["prefix"],
+                _sublime_scope,
+                _description
+            )
 
         if _save:
+            if _sublime_scope == "all":
+                _scope = "all"
+            else:
+                _scope = _sublime_scope
+
+            file_name = (
+                _scope + "_" + key + settings.get(
+                    "vscode_snippets_file_extensions",
+                    ".sublime-snippets"
+                ))
             user_path = os.path.join(
                 *[
                     sublime.packages_path(),
                     "User",
                     "VscodeSnippetsParser",
-                    "snippets",
-                    (_data["scope"] + "_" + key + settings.get(
-                        "vscode_snippets_file_extensions",
-                        ".sublime-snippets"
-                    )).replace(" ", "_").replace(":", "")
+                    "Snippets",
+                    re.sub(RE_REPLACE, "_", file_name)
                 ]
             )
             user_dir = os.path.dirname(user_path)
