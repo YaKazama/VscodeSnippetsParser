@@ -59,3 +59,10 @@
     "args": {"is_run": true}
 }
 ```
+
+# 安装
+
+```
+cd /opt/sublime_text/Data/Packages/
+git clone https://github.com/YaKazama/VscodeSnippetsParser.git
+```
