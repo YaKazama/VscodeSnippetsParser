@@ -86,8 +86,11 @@ def load_filter_json(edit):
     _filter = settings.get("vscode_save_filter_to_file")
     _filter_json = {}
     if _filter:
-        with open(cache.get_filter_file()) as f:
+        json_file = cache.get_filter_file()
+        with open(json_file) as f:
             _filter_json = json.load(f)
+        if os.path.exists(json_file):
+            os.remove(json_file)
     return _filter_json
 
 
