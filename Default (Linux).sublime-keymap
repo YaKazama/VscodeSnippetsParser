@@ -1,0 +1,7 @@
+[
+    {
+        "keys": ["shift+alt+f"],
+        "command": "vscode_snippets_parser",
+        "args": {"is_run": true}
+    }
+]
