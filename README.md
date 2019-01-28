@@ -12,7 +12,10 @@
 "vscode_run_at_startup": false,
 
 # 需要解析的文件列表，可以包括：“*”。
-# 示例：[], "auto", ["path/to/python.code-snippets"], ["path/to/*.code-snippets"]
+# 示例：[], ["path/to/python.code-snippets"], ["path/to/*.code-snippets"]
+# []：在当前目录中查找。
+# 相对路径：会在已打开的所有目录（folders）下查找。
+# 绝对路径：会直接查找指定文件。
 "vscode_external_files": [],
 
 # 允许解析的文件后缀名称。必须是 JSON 格式，否则会出现不可明状的错误。
