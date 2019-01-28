@@ -3,6 +3,7 @@
 * 用于将 `VS Code` 的代码片段（`Snippets`）文件转换为Sublime Text 3 (3188) 支持的
   文件：`.sublime-completions` 或 `.sublime-snippet`。
 * 代码片段中的环境变量，没有做处理。
+* 生成后的文件存放于 `Packages/User/VscodeSnippetsParser` 目录下。
 
 ## 参数说明
 
