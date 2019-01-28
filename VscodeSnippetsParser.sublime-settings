@@ -1,27 +1,19 @@
 // view.run_command("vscode_snippets_parser")
+// Parameter description, see: README.md
 {
-    // If true, it runs at startup.
     "vscode_run_at_startup": false,
-    // allow: "auto", ["/path/to/file"], ["path/to/file"]
     "vscode_external_files": [],
-    // extensions name. the file must be a json file.
     "vscode_extensions": [
         ".code-snippets", ".json"
     ],
-    // line break. choices: "\n", "\t\n", "\t", ""
     "vscode_line_break": "\n",
-    // save to json file.
     "vscode_save_filter_to_file": true,
     "vscode_filter_file": "vscode_filter_file.json",
-    // parser and save to completions file.
     "vscode_save_completions_file": true,
     "vscode_completions_file_extensions": ".sublime-completions",
-    // parser and save to snippets files.
     "vscode_save_snippets_file": false,
     "vscode_snippets_file_extensions": ".sublime-snippet",
-    // to change the scopes.
     "vscode_scopes": {
-        // vscode_scope: sublime_scope
         "python": "source.python",
         "restructuredtext": "text.restructuredtext",
         "shellscript": "source.shell.bash"
