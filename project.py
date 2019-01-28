@@ -19,22 +19,22 @@ def get_all_files(path):
 
 def get_vscode_external_files():
     vs_load_files = settings.get("vscode_external_files", [])
-    vs_extension = settings.get("vscode_extension")
+    vs_extensions = settings.get("vscode_extensions")
     project_folders = sublime.active_window().folders()
     external_files = []
     tmp_files = []
 
-    if vs_load_files == "auto":
+    if vs_load_files == []:
         vs_load_files = project_folders
 
         for _dir in vs_load_files:
             tmp_files.extend(get_all_files(_dir))
 
         for _f in tmp_files:
-            for _extension in vs_extension:
+            for _extension in vs_extensions:
                 if _f.endswith(_extension):
                     external_files.append(_f)
-    elif vs_load_files == []:
+    else:
         for _folder in project_folders:
             for _f in vs_load_files:
                 if not _f.startswith("/"):
@@ -43,7 +43,5 @@ def get_vscode_external_files():
                     print("Directory: ", _f)
                     raise ValueError("Can't be a directory")
                 external_files.extend(glob.glob(_f))
-    else:
-        for file_path in vs_load_files:
-            external_files.extend(glob.glob(file_path))
+
     return external_files
