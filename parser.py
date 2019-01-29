@@ -15,6 +15,7 @@ RE_MULTI_LINE_START = r"^(\s*(/\*)+|(/\*)+)+.*"
 RE_MULTI_LINE_END = r".*\*/.*$"
 RE_REPLACE = r"[/():\ ]"
 RE_DESCRIPTION = r"[<>]"
+RE_NO_DISPLAY_DESCRIPTION = r"<description>.*</description>"
 
 
 def remove_file(path):
@@ -102,6 +103,7 @@ def parser_and_save_json_completions(data):
     _dict_completions = []
     _scopes_dict = settings.get("vscode_scopes")
     _save = settings.get("vscode_save_completions_file")
+    _display_description = settings.get("vscode_display_description")
 
     for key in data.keys():
         _data = data[key]
@@ -119,11 +121,18 @@ def parser_and_save_json_completions(data):
             _competion_dict = {}
             _dict_completions = []
 
-        _competion_dict = {
-            "trigger": _data["prefix"],
-            "contents": "\n".join(_data["body"]),
-            "description": _data["description"]
-        }
+        if _display_description:
+            _competion_dict = {
+                "trigger": _data["prefix"],
+                "contents": "\n".join(_data["body"]),
+                "description": _data["description"]
+            }
+        else:
+            _competion_dict = {
+                "trigger": _data["prefix"],
+                "contents": "\n".join(_data["body"]),
+            }
+
         _dict_completions.append(_competion_dict)
         if _sublime_scope == "all":
             _tmp_dict = {
@@ -173,6 +182,7 @@ def parser_and_save_json_completions(data):
 def parser_and_save_json_snippets(data):
     _scopes_dict = settings.get("vscode_scopes")
     _save = settings.get("vscode_save_snippets_file")
+    _display_description = settings.get("vscode_display_description")
 
     for key in data.keys():
         _data = data[key]
@@ -211,11 +221,14 @@ def parser_and_save_json_snippets(data):
                 _description
             )
 
+        if not _display_description:
+            snippet_info = re.sub(RE_NO_DISPLAY_DESCRIPTION, "", snippet_info)
+
         if _save:
             if _sublime_scope == "all":
                 _scope = "all"
             else:
-                _scope = _sublime_scope
+                _scope = _data["scope"]
 
             file_name = (
                 _scope + "_" + key + settings.get(
