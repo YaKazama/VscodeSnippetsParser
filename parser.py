@@ -112,7 +112,7 @@ def parser_and_save_json_completions(data):
         elif _data["scope"] in _scopes_dict.keys():
             _sublime_scope = _scopes_dict[_data["scope"]]
         else:
-            _sublime_scope = "text.plain"
+            _sublime_scope = _data["scope"]
 
         if not _key or _key == _data["scope"]:
             _key = _data["scope"]
@@ -191,7 +191,7 @@ def parser_and_save_json_snippets(data):
         elif _data["scope"] in _scopes_dict.keys():
             _sublime_scope = _scopes_dict[_data["scope"]]
         else:
-            _sublime_scope = "text.plain"
+            _sublime_scope = _data["scope"]
 
         if re.findall(RE_DESCRIPTION, _data["description"]):
             _description = "<![CDATA[{}]]>".format(_data["description"])
