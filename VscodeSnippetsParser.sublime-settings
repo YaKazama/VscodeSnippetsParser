@@ -13,6 +13,7 @@
     "vscode_completions_file_extensions": ".sublime-completions",
     "vscode_save_snippets_file": false,
     "vscode_snippets_file_extensions": ".sublime-snippet",
+    "vscode_display_description": false,
     "vscode_scopes": {
         "python": "source.python",
         "restructuredtext": "text.restructuredtext",
