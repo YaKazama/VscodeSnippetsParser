@@ -46,6 +46,9 @@
 # snippet 文件后缀。
 "vscode_snippets_file_extensions": ".sublime-snippet",
 
+# 是否在转换后的文件中写入 description 内容。默认：false。
+"vscode_display_description": false,
+
 # scope 转换字典。格式："<vscode_scope>": "<sublime_scope>"。
 "vscode_scopes": {
     "python": "source.python",
