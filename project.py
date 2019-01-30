@@ -40,8 +40,13 @@ def get_vscode_external_files():
                 if not _f.startswith("/"):
                     _f = "/".join([_folder, _f])
                 if os.path.isdir(_f):
-                    print("Directory: ", _f)
-                    raise ValueError("Can't be a directory")
-                external_files.extend(glob.glob(_f))
+                    tmp_files.extend(get_all_files(_f))
+
+                    for _f in tmp_files:
+                        for _extension in vs_extensions:
+                            if _f.endswith(_extension):
+                                external_files.append(_f)
+                else:
+                    external_files.extend(glob.glob(_f))
 
     return external_files
