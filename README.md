@@ -12,7 +12,11 @@
 "vscode_run_at_startup": false,
 
 # 需要解析的文件列表，可以包括：“*”。
-# 示例：[], ["path/to/python.code-snippets"], ["path/to/*.code-snippets"]
+# 示例：
+#  []
+#  ["path/to/file/"]
+#  ["path/to/python.code-snippets"]
+#  ["path/to/*.code-snippets"]
 # []：在当前目录中查找。
 # 相对路径：会在已打开的所有目录（folders）下查找。
 # 绝对路径：会直接查找指定文件。
