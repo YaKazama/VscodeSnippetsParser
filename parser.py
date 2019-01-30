@@ -98,6 +98,7 @@ def load_filter_json(edit):
 
 
 def parser_and_save_json_completions(data):
+    all_num = 0
     _key = ""
     json_new_dict = {}
     _dict_completions = []
@@ -109,6 +110,7 @@ def parser_and_save_json_completions(data):
         _data = data[key]
         if _data["scope"] == "":
             _sublime_scope = "all"
+            all_num += 1
         elif _data["scope"] in _scopes_dict.keys():
             _sublime_scope = _scopes_dict[_data["scope"]]
         else:
@@ -145,12 +147,13 @@ def parser_and_save_json_completions(data):
             }
         json_new_dict.update(
             {
-                "%s" % _data["scope"] or "all": _tmp_dict
+                "%s" % _data["scope"] or "all" + str(all_num): _tmp_dict
             }
         )
 
     if _save:
         for key, value in json_new_dict.items():
+            key = "all" if key.startswith("all") else key
             user_path = os.path.join(
                 *[
                     sublime.packages_path(),
@@ -177,6 +180,7 @@ def parser_and_save_json_completions(data):
                         separators=(',', ': ')
                     )
                 )
+            print("  Parser To Completions:", user_path)
 
 
 def parser_and_save_json_snippets(data):
@@ -251,6 +255,7 @@ def parser_and_save_json_snippets(data):
 
             with open(user_path, "w") as f:
                 f.write(snippet_info)
+            print("  Parser To Snippets:", user_path)
 
 
 def parser_file(edit, path=None):
@@ -263,6 +268,7 @@ def parser_file(edit, path=None):
     _snippet = settings.get("vscode_save_snippets_file", False)
 
     for path in all_path:
+        print("VscodeSnippetsParser External Files:", path)
         filter_file(edit, path)
         json_data = load_filter_json(edit)
         if _completion:
