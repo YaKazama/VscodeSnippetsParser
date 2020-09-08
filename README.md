@@ -21,7 +21,8 @@
 # 相对路径：会在已打开的所有目录（folders）下查找。
 # 绝对路径：会直接查找指定文件。
 # 指定目录：会遍历目录下的所有文件，找出由：vscode_extensions 中指定后缀的文件。
-"vscode_external_files": [],
+# 任意字符串：遍历`os.path.join(os.path.dirname(sublime.packages_path()), settings.get("vscode_external_files", "VscodeSnippets"))`目录。目录不存在则新建空目录。
+"vscode_external_files": "VscodeSnippets",
 
 # 允许解析的文件后缀名称。必须是 JSON 格式，否则会出现不可明状的错误。
 "vscode_extensions": [

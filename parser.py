@@ -97,7 +97,7 @@ def load_filter_json(edit):
     return _filter_json
 
 
-def parser_and_save_json_completions(data):
+def parser_and_save_json_completions(data, fn=None):
     all_num = 0
     _key = ""
     json_new_dict = {}
@@ -108,16 +108,22 @@ def parser_and_save_json_completions(data):
 
     for key in data.keys():
         _data = data[key]
-        if _data["scope"] == "":
+        if "scope" in _data.keys():
+            __scope = _data["scope"]
+        else:
+            __scope = ""
+            if str(fn).endswith('.json'):
+                __scope = fn.split('.json')[0].split('/')[-1]
+        if __scope == "":
             _sublime_scope = "all"
             all_num += 1
-        elif _data["scope"] in _scopes_dict.keys():
-            _sublime_scope = _scopes_dict[_data["scope"]]
+        elif __scope in _scopes_dict.keys():
+            _sublime_scope = _scopes_dict[__scope]
         else:
-            _sublime_scope = _data["scope"]
+            _sublime_scope = __scope
 
-        if not _key or _key == _data["scope"]:
-            _key = _data["scope"]
+        if not _key or _key == __scope:
+            _key = __scope
         else:
             _key = ""
             _competion_dict = {}
@@ -147,7 +153,7 @@ def parser_and_save_json_completions(data):
             }
         json_new_dict.update(
             {
-                "%s" % _data["scope"] or "all" + str(all_num): _tmp_dict
+                "%s" % __scope or "all" + str(all_num): _tmp_dict
             }
         )
 
@@ -183,19 +189,25 @@ def parser_and_save_json_completions(data):
             print("  Parser To Completions:", user_path)
 
 
-def parser_and_save_json_snippets(data):
+def parser_and_save_json_snippets(data, fn=None):
     _scopes_dict = settings.get("vscode_scopes")
     _save = settings.get("vscode_save_snippets_file")
     _display_description = settings.get("vscode_display_description")
 
     for key in data.keys():
         _data = data[key]
-        if _data["scope"] == "":
-            _sublime_scope = "all"
-        elif _data["scope"] in _scopes_dict.keys():
-            _sublime_scope = _scopes_dict[_data["scope"]]
+        if "scope" in _data.keys():
+            __scope = _data["scope"]
         else:
-            _sublime_scope = _data["scope"]
+            __scope = ""
+            if str(fn).endswith('.json'):
+                __scope = fn.split('.json')[0].split('/')[-1]
+        if __scope == "":
+            _sublime_scope = "all"
+        elif __scope in _scopes_dict.keys():
+            _sublime_scope = _scopes_dict[__scope]
+        else:
+            _sublime_scope = __scope
 
         if re.findall(RE_DESCRIPTION, _data["description"]):
             _description = "<![CDATA[{}]]>".format(_data["description"])
@@ -232,7 +244,7 @@ def parser_and_save_json_snippets(data):
             if _sublime_scope == "all":
                 _scope = "all"
             else:
-                _scope = _data["scope"]
+                _scope = __scope
 
             file_name = (
                 _scope + "_" + key + settings.get(
@@ -272,6 +284,6 @@ def parser_file(edit, path=None):
         filter_file(edit, path)
         json_data = load_filter_json(edit)
         if _completion:
-            parser_and_save_json_completions(json_data)
+            parser_and_save_json_completions(json_data, fn=path)
         if _snippet:
-            parser_and_save_json_snippets(json_data)
+            parser_and_save_json_snippets(json_data, fn=path)

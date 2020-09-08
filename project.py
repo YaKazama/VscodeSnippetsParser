@@ -24,8 +24,25 @@ def get_vscode_external_files():
     external_files = []
     tmp_files = []
 
-    if vs_load_files == []:
+    if vs_load_files == [] or vs_load_files == "":
         vs_load_files = project_folders
+
+        for _dir in vs_load_files:
+            tmp_files.extend(get_all_files(_dir))
+
+        for _f in tmp_files:
+            for _extension in vs_extensions:
+                if _f.endswith(_extension):
+                    external_files.append(_f)
+    elif isinstance(vs_load_files, str):
+        project_folders = os.path.join(
+            os.path.dirname(sublime.packages_path()),
+            vs_load_files
+        )
+        if not os.path.exists(project_folders):
+            print("warnning: {} not exists!".format(project_folders))
+            return external_files
+        vs_load_files = [project_folders]
 
         for _dir in vs_load_files:
             tmp_files.extend(get_all_files(_dir))

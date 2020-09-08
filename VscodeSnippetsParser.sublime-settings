@@ -2,7 +2,7 @@
 // Parameter description, see: README.md
 {
     "vscode_run_at_startup": false,
-    "vscode_external_files": [],
+    "vscode_external_files": "VscodeSnippets",
     "vscode_extensions": [
         ".code-snippets", ".json"
     ],
@@ -16,6 +16,7 @@
     "vscode_display_description": false,
     "vscode_scopes": {
         "python": "source.python",
+        "markdown": "text.html.markdown",
         "restructuredtext": "text.restructuredtext",
         "shellscript": "source.shell.bash"
     }
